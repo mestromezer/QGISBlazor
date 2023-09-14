@@ -22,13 +22,19 @@ namespace QGISDataApi.Controllers
             _connection = (Services.DbConnection)connection;
         }
         [HttpGet]
-        public List<Building> Index()
+        public async Task<List<Building>> Index()
         {
             try
             {
-                return _connection.GetItems();
+                Response.StatusCode = 200;
+                //var jsonResponse = JsonSerializer.Serialize(await _connection.GetItems());
+                return await _connection.GetItems();
             }
-            catch (Exception ex) { throw ex; }
+            catch (Exception ex) 
+            {
+                _logger.LogError("./Index occured error");
+                throw ex; 
+            }
         }
     }
 }

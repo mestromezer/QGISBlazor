@@ -11,7 +11,7 @@ namespace QGISDataApi.Services
     {
         private readonly string _connectionString = "Data Source = DESKTOP-PMP9UHE; Initial catalog=Project; Integrated Security=true";
 
-        public List<Building> GetItems()
+        public async Task<List<Building>> GetItems()
         {
             string Query = "SELECT * FROM Buildings" ;
 
@@ -22,7 +22,7 @@ namespace QGISDataApi.Services
                 con.Open();
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    while (reader.Read())
+                    while (await reader.ReadAsync())
                     {
                         var _id = reader.GetInt32(0);
                         var _geom = SqlGeometry.Deserialize(reader.GetSqlBytes(1)).ToString();

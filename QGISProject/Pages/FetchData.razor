@@ -1,13 +1,16 @@
 ﻿@page "/fetchdata"
-@inject HttpClient Http
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@inject HttpClient client
+@inject ILogger<FetchData> Logger
 
-<PageTitle>Weather forecast</PageTitle>
+<PageTitle>Здания</PageTitle>
 
-<h1>Weather forecast</h1>
+<h1>Списко зданий</h1>
 
-<p>This component demonstrates fetching data from the server.</p>
+<p>Данные получены от QGISDataApi</p>
 
-@if (forecasts == null)
+@if (_buildingsData == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -16,42 +19,58 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
+                <th>ID</th>
+                <th>Адресс</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var forecast in forecasts)
+            @foreach (var data in _buildingsData)
             {
                 <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
+                    <td>@data.ID</td>
+                    <td>@data.Address</td>
                 </tr>
             }
         </tbody>
     </table>
 }
 
-@code {
-    private WeatherForecast[]? forecasts;
+@code 
+{
+    IList<Building> _buildingsData = default!;
+    public class Building
+    {
+        public int ID { get; set; }
+        public string? Geom { get; set; }
+        public string? Address { get; set; }
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
+        var request = new HttpRequestMessage(HttpMethod.Get,
+            "https://localhost:7066/QGIS"
+        );
+        request.Headers.Add("accept", "application/json");
+        var response = await client.SendAsync(request);
+
+        Logger.LogInformation($"Status code: {response.StatusCode}");
+
+        try
+        {
+            _buildingsData = await response.Content.ReadFromJsonAsync<List<Building>>();
+        }
+        catch (Exception ex) {
+            Logger.LogError(ex.Message);
+        }
+
+        /*if (response.IsSuccessStatusCode)
+        {
+            var responseStream = await response.Content.ReadFromJsonAsync<Building>();
+        }
+        else
+        {
+            throw new Exception(message: "Api response bad status code");
+        }*/
     }
 
-    public class WeatherForecast
-    {
-        public DateTime Date { get; set; }
-
-        public int TemperatureC { get; set; }
-
-        public string? Summary { get; set; }
-
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-    }
 }

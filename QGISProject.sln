@@ -5,7 +5,7 @@ VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QGISProject", "QGISProject\QGISProject.csproj", "{522B5BE3-BA07-45AF-AD94-986E701C6A64}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QGISDataApi", "QGISDataApi\QGISDataApi.csproj", "{8B2D277D-DB88-4D75-BD76-7E1E1FDFD5A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QGISDataApi", "QGISDataApi\QGISDataApi.csproj", "{4BADCC8B-F220-46FF-8ED1-9B4B2DA6C607}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{522B5BE3-BA07-45AF-AD94-986E701C6A64}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{522B5BE3-BA07-45AF-AD94-986E701C6A64}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{522B5BE3-BA07-45AF-AD94-986E701C6A64}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8B2D277D-DB88-4D75-BD76-7E1E1FDFD5A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8B2D277D-DB88-4D75-BD76-7E1E1FDFD5A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8B2D277D-DB88-4D75-BD76-7E1E1FDFD5A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8B2D277D-DB88-4D75-BD76-7E1E1FDFD5A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BADCC8B-F220-46FF-8ED1-9B4B2DA6C607}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BADCC8B-F220-46FF-8ED1-9B4B2DA6C607}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BADCC8B-F220-46FF-8ED1-9B4B2DA6C607}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BADCC8B-F220-46FF-8ED1-9B4B2DA6C607}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
