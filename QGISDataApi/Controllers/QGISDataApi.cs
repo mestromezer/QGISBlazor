@@ -1,12 +1,4 @@
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using QGISDataApi.Services;
-using System.Data.Common;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace QGISDataApi.Controllers
 {
@@ -22,18 +14,76 @@ namespace QGISDataApi.Controllers
             _connection = (Services.DbConnection)connection;
         }
         [HttpGet]
-        public async Task<List<Building>> Index()
+        public async Task<List<Building>> GetAll()
         {
             try
             {
                 Response.StatusCode = 200;
-                //var jsonResponse = JsonSerializer.Serialize(await _connection.GetItems());
                 return await _connection.GetItems();
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
-                _logger.LogError("./Index occured error");
-                throw ex; 
+                _logger.LogError("GET/[controller] occured error");
+                throw ex;
+            }
+        }
+        [HttpGet]
+        [Route("/{id}")]
+        public async Task<Building> GetOne(int id)
+        {
+            try
+            {
+                Response.StatusCode = 200;
+                return await _connection.GetItem(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("GET/[controller]/{id} occured error");
+                _logger.LogError(ex.Message);
+                throw ex;
+            }
+        }
+        [HttpPost]
+        public async Task Add(Building newbie)
+        {
+            try
+            {
+                Response.StatusCode = 201;
+                await _connection.AddItem(newbie);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("POST/[controller] occured error");
+                throw ex;
+            }
+        }
+        [HttpDelete]
+        [Route("/{id}")]
+        public async Task Delete(int id)
+        {
+            try
+            {
+                Response.StatusCode = 204;
+                await _connection.DeleteItem(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("DELETE/[controller]/{id} occured error");
+                throw ex;
+            }
+        }
+        [HttpPut]
+        public async Task Update(Building newbie)
+        {
+            try
+            {
+                Response.StatusCode = 204;
+                await _connection.UpdateItem(newbie);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Put/[controller] occured error");
+                throw ex;
             }
         }
     }

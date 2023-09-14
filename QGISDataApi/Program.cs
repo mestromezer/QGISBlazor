@@ -1,6 +1,4 @@
-using QGISDataApi;
 using QGISDataApi.Services;
-using static QGISDataApi.Services.IDbConnection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +7,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient();
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IDbConnection, DbConnection>();
@@ -25,7 +22,6 @@ builder.Services.AddCors(options =>
                 .AllowAnyMethod();
         });
 });
-
 builder.Services.AddCors();
 
 var app = builder.Build();
