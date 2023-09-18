@@ -1,0 +1,33 @@
+﻿@page "/delete"
+@using System.Text;
+@using Newtonsoft.Json
+@inject NavigationManager _navigationManager
+@inject HttpClient _client
+@inject ILogger<Create> _logger
+<h1>Удалить запись из таблицы "Buildings" по ID.</h1>
+<div class="row">
+    <EditForm Model="@ID" class="row">
+        <label class="col">Укажите ID: </label>
+        <InputNumber @bind-Value="ID" class="col"/>
+        <button @onclick="Send" type="submit">Submit</button>
+    </EditForm>
+</div>
+
+@code {
+    private int ID;
+    private async void Send()
+    {
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"https://localhost:7066/QGIS/{ID}");
+        try
+        {
+            var response = await _client.SendAsync(request);
+            _logger.LogInformation($"DELETE response status: {response.StatusCode}");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Delete page Send method occured error");
+            throw ex;
+        }
+        _navigationManager.NavigateTo("/");
+    }
+}

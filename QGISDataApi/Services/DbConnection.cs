@@ -1,5 +1,6 @@
 ﻿using Microsoft.SqlServer.Types;
 using System.Data.SqlClient;
+using NetTopologySuite.Geometries;
 
 namespace QGISDataApi.Services
 {
@@ -19,7 +20,7 @@ namespace QGISDataApi.Services
                 {
                     while (await reader.ReadAsync())
                     {
-                        if (reader.IsDBNull(0) || reader.IsDBNull(1) || reader.IsDBNull(2))
+                        if (reader.IsDBNull(0))
                         {
                             return null;
                         }
@@ -51,7 +52,7 @@ namespace QGISDataApi.Services
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     await reader.ReadAsync();
-                    if (reader.IsDBNull(0) || reader.IsDBNull(1) || reader.IsDBNull(2))
+                    if (reader.IsDBNull(0))
                     {
                         return null;
                     }

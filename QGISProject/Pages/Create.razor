@@ -1,0 +1,51 @@
+﻿@page "/create"
+@using System.Text;
+@using Newtonsoft.Json
+@inject NavigationManager _navigationManager
+@inject HttpClient _client
+@inject ILogger<Create> _logger
+
+<h1>Создать запись в таблице "Buildings".</h1>
+
+<EditForm Model="@Model" class="row">
+    <!--<div class="row">
+        <label class="col">Id: </label>
+        <InputNumber @bind-Value="Model.ID" class="col" />
+    </div>-->
+    <div class="row">
+        <label class="col">Новая геометрия: </label>
+        <InputText @bind-Value="Model.Geom" class="col" />
+    </div>
+
+    <div class="row">
+        <label class="col">Новый адрес: </label>
+        <InputText @bind-Value="Model.Address" class="col" />
+    </div>
+
+    <button @onclick="Send" type="submit">Submit</button>
+</EditForm>
+
+@code {
+    private Building Model { get; set; }
+    protected override void OnInitialized()
+    {
+        Model = new Building();
+        base.OnInitialized();
+    }
+    private async void Send()
+    {
+        var request = new HttpRequestMessage(HttpMethod.Post, "https://localhost:7066/QGIS");
+        request.Content = new StringContent(JsonConvert.SerializeObject(Model), Encoding.UTF8, "application/json");
+        try
+        {
+            var response = await _client.SendAsync(request);
+            _logger.LogInformation($"POST response status: {response.StatusCode}");
+        }
+        catch(Exception ex)
+        {
+            _logger.LogError("Create page Send method occured error");
+            throw ex;
+        }
+        _navigationManager.NavigateTo("/");
+    }
+}

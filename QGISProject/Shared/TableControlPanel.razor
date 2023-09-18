@@ -1,0 +1,22 @@
+﻿<div class="row-cols-sm-auto">
+    <h3>TableControlPanel</h3> 
+    <div class="row">
+        <NavLink class="nav-link" href="create">
+            <p>Создать запись</p>
+        </NavLink>
+        <!--<NavLink class="nav-link" href="delete">
+            <p>Удалить</p>
+        </NavLink>-->
+    </div>
+</div>
+@code {
+    private Building? Model { get; set; } = default!;
+    protected override void OnInitialized() =>
+        Model = new Building()
+        {
+         ID=new int(),
+         Geom=null,
+         Address=null
+        }
+        ;
+}

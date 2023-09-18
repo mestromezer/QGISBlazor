@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace QGISDataApi.Controllers
 {
@@ -18,7 +19,7 @@ namespace QGISDataApi.Controllers
         {
             try
             {
-                Response.StatusCode = 200;
+                //return JsonConvert.SerializeObject(await _connection.GetItems());
                 return await _connection.GetItems();
             }
             catch (Exception ex)
