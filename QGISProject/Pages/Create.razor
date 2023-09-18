@@ -8,17 +8,13 @@
 <h1>Создать запись в таблице "Buildings".</h1>
 
 <EditForm Model="@Model" class="row">
-    <!--<div class="row">
-        <label class="col">Id: </label>
-        <InputNumber @bind-Value="Model.ID" class="col" />
-    </div>-->
     <div class="row">
-        <label class="col">Новая геометрия: </label>
+        <label class="col">Геометрия: </label>
         <InputText @bind-Value="Model.Geom" class="col" />
     </div>
 
     <div class="row">
-        <label class="col">Новый адрес: </label>
+        <label class="col">Адрес: </label>
         <InputText @bind-Value="Model.Address" class="col" />
     </div>
 

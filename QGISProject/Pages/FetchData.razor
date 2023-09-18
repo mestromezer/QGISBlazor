@@ -3,7 +3,6 @@
 @inject HttpClient _client
 @inject NavigationManager _navigationManager
 @inject ILogger<FetchData> _logger
-
 <PageTitle>Здания</PageTitle>
 
 <h1>Панель управления</h1>
@@ -34,9 +33,8 @@ else
                     <td>@data.ID</td>
                     <td>@data.Address</td>
                     <td>
-                        <a href='/edit/@data.ID' class="btn btn-outline-dark" role="button">Edit</a>
-                        <a href='/delete/@data.ID' class="btn btn-outline-danger" role="button">Delete</a>
-                        <button type="button" @onclick="@(e=>Delete(data.ID))">Удалить нафик</button>
+                        <a href='/edit/@data.ID' class="btn btn-outline-dark" role="button">Редактировать</a>
+                        <button class="btn btn-outline-danger" type="button" @onclick="@(e=>Delete(data.ID))">Удалить</button>
                     </td>
                 </tr>
             }

@@ -19,7 +19,6 @@ namespace QGISDataApi.Controllers
         {
             try
             {
-                //return JsonConvert.SerializeObject(await _connection.GetItems());
                 return await _connection.GetItems();
             }
             catch (Exception ex)

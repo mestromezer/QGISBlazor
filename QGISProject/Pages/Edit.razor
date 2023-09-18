@@ -1,0 +1,62 @@
+﻿@page "/edit/{id:int}"
+@using System.Text;
+@using Newtonsoft.Json
+@inject NavigationManager _navigationManager
+@inject HttpClient _client
+@inject ILogger<Create> _logger
+<h1>Редактировать</h1>
+
+<EditForm Model="@Model" class="row">
+    <div class="row">
+        <label class="col">Новая геометрия: </label>
+        <InputText @bind-Value="Model.Geom" class="col"/>
+    </div>
+
+    <div class="row">
+        <label class="col">Новый адрес: </label>
+        <InputText @bind-Value="Model.Address" class="col"/>
+    </div>
+
+    <button @onclick="Send" type="submit">Submit</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    private Building Model { get; set; }
+    protected override async void OnInitialized()
+    {
+        Model = new Building();
+        try
+        {
+            using (var request = new HttpRequestMessage(HttpMethod.Get, $"https://localhost:7066/{Id}"))
+            {
+                var response = await _client.SendAsync(request);
+                _logger.LogInformation($"GET (id={Id}) response status: {response.StatusCode}");
+                Model = await response.Content.ReadFromJsonAsync<Building>();
+                if (Model == null) throw new Exception("Responsed Model eqauls null");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Edit page OnInitialized method occured error");
+            throw ex;
+        }
+    }
+    private async void Send()
+    {
+        var request = new HttpRequestMessage(HttpMethod.Put, "https://localhost:7066/QGIS");
+        request.Content = new StringContent(JsonConvert.SerializeObject(Model), Encoding.UTF8, "application/json");
+        try
+        {
+            var response = await _client.SendAsync(request);
+            _logger.LogInformation($"PUT response status: {response.StatusCode}");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Edit page Send method occured error");
+            throw ex;
+        }
+        _navigationManager.NavigateTo("/");
+    }
+}
