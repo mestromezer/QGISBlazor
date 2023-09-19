@@ -1,9 +1,9 @@
 ﻿@page "/create"
 @using System.Text;
 @using Newtonsoft.Json
-@inject NavigationManager _navigationManager
-@inject HttpClient _client
-@inject ILogger<Create> _logger
+@inject NavigationManager navigationManager
+@inject HttpClient client
+@inject ILogger<Create> logger
 
 <h1>Создать запись в таблице "Buildings".</h1>
 
@@ -34,14 +34,14 @@
         request.Content = new StringContent(JsonConvert.SerializeObject(Model), Encoding.UTF8, "application/json");
         try
         {
-            var response = await _client.SendAsync(request);
-            _logger.LogInformation($"POST response status: {response.StatusCode}");
+            var response = await client.SendAsync(request);
+            logger.LogInformation($"POST response status: {response.StatusCode}");
         }
         catch(Exception ex)
         {
-            _logger.LogError("Create page Send method occured error");
+            logger.LogError("Create page Send method occured error");
             throw ex;
         }
-        _navigationManager.NavigateTo("/");
+        navigationManager.NavigateTo("/");
     }
 }

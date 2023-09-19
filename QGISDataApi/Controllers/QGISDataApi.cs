@@ -8,11 +8,11 @@ namespace QGISDataApi.Controllers
     public class QGISController : ControllerBase
     {
         private readonly ILogger<QGISController> _logger;
-        private readonly Services.DbConnection _connection;
-        public QGISController(ILogger<QGISController> logger, Services.IDbConnection connection)
+        private readonly Services.DbContext _connection;
+        public QGISController(ILogger<QGISController> logger, Services.IDbContext connection)
         {
             _logger = logger;
-            _connection = (Services.DbConnection)connection;
+            _connection = (Services.DbContext)connection;
         }
         [HttpGet]
         public async Task<List<Building>> GetAll()

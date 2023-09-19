@@ -1,12 +1,16 @@
 ﻿using Microsoft.SqlServer.Types;
 using System.Data.SqlClient;
-using NetTopologySuite.Geometries;
+using Microsoft.Extensions.Configuration;
 
 namespace QGISDataApi.Services
 {
-    public class DbConnection: IDbConnection
+    public class DbContext: IDbContext
     {
-        private readonly string _connectionString = "Data Source = DESKTOP-PMP9UHE; Initial catalog=Project; Integrated Security=true";
+        private readonly string _connectionString;
+        DbContext()
+        {
+            _connectionString = "Data Source = DESKTOP-PMP9UHE; Initial catalog=Project; Integrated Security=true";
+        }
         public async Task<List<Building>> GetItems()
         {
             string Query = "SELECT * FROM Buildings" ;

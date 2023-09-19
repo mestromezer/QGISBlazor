@@ -1,19 +1,14 @@
 ﻿@page "/"
 @using System.Text.Json
-@inject HttpClient _client
-@inject NavigationManager _navigationManager
-@inject ILogger<FetchData> _logger
+@inject HttpClient client
+@inject NavigationManager navigationManager
+@inject ILogger<Index> logger
 <PageTitle>Здания</PageTitle>
-
 <h1>Панель управления</h1>
-
 <TableControlPanel />
-
 <h1>Списко зданий</h1>
-
 <p>Данные получены от QGISDataApi</p>
-
-@if (_buildingsData == null)
+@if (buildingsData == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -27,7 +22,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var data in _buildingsData)
+            @foreach (var data in buildingsData)
             {
                 <tr>
                     <td>@data.ID</td>
@@ -44,7 +39,7 @@ else
 
 @code 
 {
-    IList<Building> _buildingsData = default!;
+    IList<Building> buildingsData = default!;
 
     private async void Delete(int id)
     {
@@ -53,17 +48,17 @@ else
             using (var request = new HttpRequestMessage(HttpMethod.Delete, $"https://localhost:7066/{id}"))
             {
 
-                var response = await _client.SendAsync(request);
-                _logger.LogInformation($"DELETE response status: {response.StatusCode}");
+                var response = await client.SendAsync(request);
+                logger.LogInformation($"DELETE response status: {response.StatusCode}");
 
             }
         }
         catch (Exception ex)
         {
-            _logger.LogError("Default page Delete method occured error");
+            logger.LogError("Default page Delete method occured error");
             throw ex;
         }
-        _navigationManager.NavigateTo("/", true);
+        navigationManager.NavigateTo("/", true);
     }
 
     protected override async Task OnInitializedAsync()
@@ -72,18 +67,18 @@ else
             "https://localhost:7066/QGIS"
         );
         request.Headers.Add("accept", "application/json");
-        var response = await _client.SendAsync(request);
-
-        _logger.LogInformation($"Status code: {response.StatusCode}");
+        var response = await client.SendAsync(request);
 
         try
         {
-            _buildingsData = await response.Content.ReadFromJsonAsync<List<Building>>();
-            _logger.LogInformation($"Loaded table from response as JSON: {DateTime.Now}");
+            buildingsData = await response.Content.ReadFromJsonAsync<List<Building>>();
+            logger.LogInformation($"GET response status: {response.StatusCode}");
+            if (buildingsData==null) { throw new Exception("buildingData was null."); } 
         }
         catch (Exception ex) {
-            _logger.LogError("FetchData page OnInitializedAsync method occured error");
-            _logger.LogError(ex.Message);
+            logger.LogError("Index page OnInitializedAsync method occured error");
+            logger.LogError(ex.Message);
+            throw ex;
         }
     }
 

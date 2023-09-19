@@ -1,9 +1,10 @@
 ﻿@page "/edit/{id:int}"
 @using System.Text;
 @using Newtonsoft.Json
-@inject NavigationManager _navigationManager
-@inject HttpClient _client
-@inject ILogger<Create> _logger
+@inject NavigationManager navigationManager
+@inject HttpClient client
+@inject ILogger<Edit> logger
+
 <h1>Редактировать</h1>
 
 <EditForm Model="@Model" class="row">
@@ -22,24 +23,24 @@
 
 @code {
     [Parameter]
-    public int Id { get; set; }
+    public int id { get; set; }
     private Building Model { get; set; }
     protected override async void OnInitialized()
     {
         Model = new Building();
         try
         {
-            using (var request = new HttpRequestMessage(HttpMethod.Get, $"https://localhost:7066/{Id}"))
+            using (var request = new HttpRequestMessage(HttpMethod.Get, $"https://localhost:7066/{id}"))
             {
-                var response = await _client.SendAsync(request);
-                _logger.LogInformation($"GET (id={Id}) response status: {response.StatusCode}");
+                var response = await client.SendAsync(request);
+                logger.LogInformation($"GET (id={id}) response status: {response.StatusCode}");
                 Model = await response.Content.ReadFromJsonAsync<Building>();
                 if (Model == null) throw new Exception("Responsed Model eqauls null");
             }
         }
         catch (Exception ex)
         {
-            _logger.LogError("Edit page OnInitialized method occured error");
+            logger.LogError("Edit page OnInitialized method occured error");
             throw ex;
         }
     }
@@ -49,14 +50,15 @@
         request.Content = new StringContent(JsonConvert.SerializeObject(Model), Encoding.UTF8, "application/json");
         try
         {
-            var response = await _client.SendAsync(request);
-            _logger.LogInformation($"PUT response status: {response.StatusCode}");
+            var response = await client.SendAsync(request);
+            logger.LogInformation($"PUT response status: {response.StatusCode}");
         }
         catch (Exception ex)
         {
-            _logger.LogError("Edit page Send method occured error");
+            logger.LogError("Edit page Send method occured error");
+            logger.LogError(ex.Message);
             throw ex;
         }
-        _navigationManager.NavigateTo("/");
+        navigationManager.NavigateTo("/");
     }
 }

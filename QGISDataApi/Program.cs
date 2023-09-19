@@ -1,15 +1,15 @@
+using Microsoft.Extensions.Configuration;
 using QGISDataApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-
+// Add services to the container. 
 builder.Services.AddHttpClient();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IDbConnection, DbConnection>();
+
+builder.Services.AddScoped<IDbContext, DbContext>();
 
 builder.Services.AddCors(options =>
 {
