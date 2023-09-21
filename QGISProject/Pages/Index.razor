@@ -3,6 +3,7 @@
 @inject HttpClient client
 @inject NavigationManager navigationManager
 @inject ILogger<Index> logger
+@inject IConfiguration configuration
 <PageTitle>Здания</PageTitle>
 <h1>Панель управления</h1>
 <TableControlPanel />
@@ -30,6 +31,7 @@ else
                     <td>
                         <a href='/edit/@data.ID' class="btn btn-outline-dark" role="button">Редактировать</a>
                         <button class="btn btn-outline-danger" type="button" @onclick="@(e=>Delete(data.ID))">Удалить</button>
+                        <a href='/bufferzone/@data.ID' class="btn btn-outline-dark" role="button">S(5)</a>
                     </td>
                 </tr>
             }
@@ -45,7 +47,7 @@ else
     {
         try
         {
-            using (var request = new HttpRequestMessage(HttpMethod.Delete, $"https://localhost:7066/{id}"))
+            using (var request = new HttpRequestMessage(HttpMethod.Delete, $"{configuration["apiUrl"]}/{id}"))
             {
 
                 var response = await client.SendAsync(request);
@@ -64,7 +66,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         var request = new HttpRequestMessage(HttpMethod.Get,
-            "https://localhost:7066/QGIS"
+            configuration["apiUrl"]
         );
         request.Headers.Add("accept", "application/json");
         var response = await client.SendAsync(request);
@@ -73,7 +75,7 @@ else
         {
             buildingsData = await response.Content.ReadFromJsonAsync<List<Building>>();
             logger.LogInformation($"GET response status: {response.StatusCode}");
-            if (buildingsData==null) { throw new Exception("buildingData was null."); } 
+            //if (buildingsData==null) { throw new Exception("buildingData was null."); } 
         }
         catch (Exception ex) {
             logger.LogError("Index page OnInitializedAsync method occured error");

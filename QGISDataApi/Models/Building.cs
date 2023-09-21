@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace QGISDataApi
+namespace QGISDirectDatabaseConnectionApi.Models
 {
     public class Building
     {
         [Required]
-        [Range(0,Int32.MaxValue)]
+        [Range(0, int.MaxValue)]
         public int ID { get; set; }
         [Required]
         [StringLength(4096)]

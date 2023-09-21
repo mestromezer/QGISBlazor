@@ -1,6 +1,7 @@
 ﻿@page "/edit/{id:int}"
 @using System.Text;
 @using Newtonsoft.Json
+@inject IConfiguration configuration
 @inject NavigationManager navigationManager
 @inject HttpClient client
 @inject ILogger<Edit> logger
@@ -30,7 +31,7 @@
         Model = new Building();
         try
         {
-            using (var request = new HttpRequestMessage(HttpMethod.Get, $"https://localhost:7066/{id}"))
+            using (var request = new HttpRequestMessage(HttpMethod.Get, $"{configuration["apiUrl"]}/{id}"))
             {
                 var response = await client.SendAsync(request);
                 logger.LogInformation($"GET (id={id}) response status: {response.StatusCode}");
@@ -46,7 +47,7 @@
     }
     private async void Send()
     {
-        var request = new HttpRequestMessage(HttpMethod.Put, "https://localhost:7066/QGIS");
+        var request = new HttpRequestMessage(HttpMethod.Put, configuration["apiUrl"]);
         request.Content = new StringContent(JsonConvert.SerializeObject(Model), Encoding.UTF8, "application/json");
         try
         {

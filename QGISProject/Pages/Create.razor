@@ -1,6 +1,7 @@
 ﻿@page "/create"
 @using System.Text;
 @using Newtonsoft.Json
+@inject IConfiguration configuration
 @inject NavigationManager navigationManager
 @inject HttpClient client
 @inject ILogger<Create> logger
@@ -30,7 +31,7 @@
     }
     private async void Send()
     {
-        var request = new HttpRequestMessage(HttpMethod.Post, "https://localhost:7066/QGIS");
+        var request = new HttpRequestMessage(HttpMethod.Post, configuration["apiUrl"]);
         request.Content = new StringContent(JsonConvert.SerializeObject(Model), Encoding.UTF8, "application/json");
         try
         {

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+using Microsoft.SqlServer.Types;
+using QGISDirectDatabaseConnectionApi.Models;
 
 namespace QGISDataApi.Controllers
 {
@@ -15,6 +16,7 @@ namespace QGISDataApi.Controllers
             _connection = (Services.DbContext)connection;
         }
         [HttpGet]
+        [Route("/")]
         public async Task<List<Building>> GetAll()
         {
             try
@@ -44,6 +46,7 @@ namespace QGISDataApi.Controllers
             }
         }
         [HttpPost]
+        [Route("/")]
         public async Task Add(Building newbie)
         {
             try
@@ -73,6 +76,7 @@ namespace QGISDataApi.Controllers
             }
         }
         [HttpPut]
+        [Route("/")]
         public async Task Update(Building newbie)
         {
             try
@@ -83,6 +87,25 @@ namespace QGISDataApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError("Put/[controller] occured error");
+                throw ex;
+            }
+        }
+        [HttpGet]
+        [Route("/{id}/bufferzone")]
+        public async Task<string> CountBufferZone(int id)
+        {
+            try 
+            {
+                Response.StatusCode = 200;
+                var building = await _connection.GetItem(id);
+                var geom = SqlGeometry.Parse(building.Geom);
+                string area = geom.STBuffer(5).STArea().ToString();
+                return area;
+            }
+            catch(Exception ex) 
+            {
+                _logger.LogError("GET/[controller]/{id}/bufferzone occured error");
+                _logger.LogError(ex.Message);
                 throw ex;
             }
         }

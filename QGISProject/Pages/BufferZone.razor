@@ -1,0 +1,48 @@
+﻿@page "/bufferzone/{id:int}"
+@inject IConfiguration configuration
+@inject NavigationManager navigationManager
+@inject HttpClient client
+@inject ILogger<BufferZone> logger
+@using Microsoft.SqlServer.Types
+@using System.Data.SqlTypes
+<h1>Площадь буферной зоны</h1>
+
+<label class="align-content-center">
+    @if (squareOfBufferZone == null)
+    {
+        <h3>Рассчитываю...</h3>
+    }
+    else
+    {
+        <h3>Площадь буферной зоны, радиусом 5 метров: @squareOfBufferZone</h3>
+        <a @onclick="@(e=>navigationManager.NavigateTo("/"))">Назад</a>
+    }
+</label>
+
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    //private Building Model { get; set; }
+    private string squareOfBufferZone {get; set;}
+    protected override async void OnInitialized()
+    {
+        //Model = new Building();
+        try
+        {
+            using (var request = new HttpRequestMessage(HttpMethod.Get, $"{configuration["apiUrl"]}/{id}/bufferzone"))
+            {
+                var response = await client.SendAsync(request);
+                logger.LogInformation($"GET (id={id}) response status: {response.StatusCode}");
+                squareOfBufferZone = await response.Content.ReadAsStringAsync();
+                logger.LogInformation($"Buffer zone for id:{id} area = {squareOfBufferZone}");
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError("BufferZone page OnInitialized method occured error");
+            throw ex;
+        }
+    }
+}

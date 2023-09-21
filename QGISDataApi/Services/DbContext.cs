@@ -1,16 +1,13 @@
 ﻿using Microsoft.SqlServer.Types;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using QGISDirectDatabaseConnectionApi.Models;
 
 namespace QGISDataApi.Services
 {
     public class DbContext: IDbContext
     {
-        private readonly string _connectionString;
-        DbContext()
-        {
-            _connectionString = "Data Source = DESKTOP-PMP9UHE; Initial catalog=Project; Integrated Security=true";
-        }
+        private readonly string _connectionString = "Data Source = DESKTOP-PMP9UHE; Initial catalog=Project; Integrated Security=true";
         public async Task<List<Building>> GetItems()
         {
             string Query = "SELECT * FROM Buildings" ;
