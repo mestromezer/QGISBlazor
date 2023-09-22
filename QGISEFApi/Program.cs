@@ -1,9 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+using QGISEFApi.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using QGISEFApi.Data;
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<QGISEFApiContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("QGISEFApiContext") 
+    ?? throw new InvalidOperationException("Connection string 'QGISEFApiContext' not found."), x => x.UseNetTopologySuite()));
 
 // Add services to the container.
-//x => x.UseNetTopologySuite()
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

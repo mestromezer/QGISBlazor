@@ -1,17 +1,20 @@
 using Microsoft.SqlServer.Types;
+using NetTopologySuite.Geometries;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QGISEFCoreApi.Models
 {
     public class Building
     {
         [Required]
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Range(0, int.MaxValue)]
         public int ID { get; set; }
         [Required]
-        [StringLength(4096)]
-        public string? Geom { get; set; }
+        public SqlGeometry Geom { get; set; }
         [StringLength(128)]
-        public string? Address { get; set; }
+        public string Address { get; set; }
     }
 }
