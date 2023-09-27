@@ -2,6 +2,10 @@ using QGISEFApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using QGISEFApi.Data;
+using System.Text.Json.Serialization;
+using System.Text.Json;
+using NetTopologySuite.IO.Converters;
+using NetTopologySuite;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<QGISEFApiContext>(options =>
@@ -10,8 +14,11 @@ builder.Services.AddDbContext<QGISEFApiContext>(options =>
 
 // Add services to the container.
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddControllers().AddJsonOptions(options => {
+    options.JsonSerializerOptions.Converters.Add(new NetTopologySuite.IO.Converters.GeoJsonConverterFactory());
+});
+
+builder.Services.AddSingleton(NtsGeometryServices.Instance);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

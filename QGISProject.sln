@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QGISBlazorWebAssemblyApplic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QGISDirectDatabaseConnectionApi", "QGISDataApi\QGISDirectDatabaseConnectionApi.csproj", "{4BADCC8B-F220-46FF-8ED1-9B4B2DA6C607}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QGISEFApi", "QGISEFApi\QGISEFApi.csproj", "{5B168486-8B75-4563-9768-EC00B837D95B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QGISEFApi", "QGISEFApi\QGISEFApi.csproj", "{5B168486-8B75-4563-9768-EC00B837D95B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
