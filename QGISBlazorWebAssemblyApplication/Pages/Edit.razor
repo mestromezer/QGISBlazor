@@ -1,6 +1,4 @@
 ﻿@page "/edit/{id:int}"
-@using System.Text;
-@using Newtonsoft.Json
 @inject IConfiguration configuration
 @inject NavigationManager navigationManager
 @inject HttpClient client
@@ -11,7 +9,7 @@
 <EditForm Model="@Model" class="row">
     <div class="row">
         <label class="col">Новая геометрия: </label>
-        <InputText @bind-Value="Model.Geom" class="col"/>
+        <InputFile @bind-Value="Model.Geom" class="col"/>
     </div>
 
     <div class="row">
@@ -35,7 +33,7 @@
             {
                 var response = await client.SendAsync(request);
                 logger.LogInformation($"GET (id={id}) response status: {response.StatusCode}");
-                Model = await response.Content.ReadFromJsonAsync<Building>();
+                Model = JsonProcessor<Building>.Parse(await response.Content.ReadAsStringAsync());
                 if (Model == null) throw new Exception("Responsed Model eqauls null");
             }
         }
@@ -47,8 +45,11 @@
     }
     private async void Send()
     {
-        var request = new HttpRequestMessage(HttpMethod.Put, configuration["apiUrl"]);
-        request.Content = new StringContent(JsonConvert.SerializeObject(Model), Encoding.UTF8, "application/json");
+        var request = new HttpRequestMessage(HttpMethod.Put, $"{configuration["apiUrl"]}/");
+        var tmp = JsonProcessor<Building>.ConvertToGeoJson(Model);
+        request.Content = new StringContent(tmp, Encoding.UTF8,
+                                    "application/json");
+        logger.LogInformation(tmp);
         try
         {
             var response = await client.SendAsync(request);

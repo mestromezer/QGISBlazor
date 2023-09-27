@@ -1,5 +1,7 @@
 ﻿@page "/"
 @using System.Text.Json
+@using NetTopologySuite.IO;
+@using QGISBlazorWebAssemblyApplication.Models;
 @inject HttpClient client
 @inject NavigationManager navigationManager
 @inject ILogger<Index> logger
@@ -73,9 +75,11 @@ else
 
         try
         {
-            buildingsData = await response.Content.ReadFromJsonAsync<List<Building>>();
+            var data = await response.Content.ReadAsStringAsync();
+
+            buildingsData = JsonProcessor<List<Building>>.Parse(data);
+
             logger.LogInformation($"GET response status: {response.StatusCode}");
-            //if (buildingsData==null) { throw new Exception("buildingData was null."); } 
         }
         catch (Exception ex) {
             logger.LogError("Index page OnInitializedAsync method occured error");

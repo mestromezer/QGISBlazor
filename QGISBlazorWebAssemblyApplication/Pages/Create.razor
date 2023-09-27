@@ -1,6 +1,7 @@
 ﻿@page "/create"
 @using System.Text;
 @using Newtonsoft.Json
+@using QGISBlazorWebAssemblyApplication.Models;
 @inject IConfiguration configuration
 @inject NavigationManager navigationManager
 @inject HttpClient client
@@ -11,7 +12,7 @@
 <EditForm Model="@Model" class="row">
     <div class="row">
         <label class="col">Геометрия: </label>
-        <InputText @bind-Value="Model.Geom" class="col" />
+        <InputFile @bind-Value="Model.Geom" class="col" />
     </div>
 
     <div class="row">
@@ -32,7 +33,7 @@
     private async void Send()
     {
         var request = new HttpRequestMessage(HttpMethod.Post, configuration["apiUrl"]);
-        request.Content = new StringContent(JsonConvert.SerializeObject(Model), Encoding.UTF8, "application/json");
+        request.Content = new StringContent(JsonProcessor<Building>.ConvertToGeoJson(Model));
         try
         {
             var response = await client.SendAsync(request);

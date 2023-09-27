@@ -45,7 +45,7 @@ namespace QGISEFApi
             return await _context.Buildings.FindAsync(id);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("/")]
         public async Task<IActionResult> PutBuilding(Building building)
         {
             try
