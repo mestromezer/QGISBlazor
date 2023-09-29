@@ -2,12 +2,22 @@
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using QGISDirectDatabaseConnectionApi.Models;
+using Microsoft.Extensions.Options;
+using NetTopologySuite.Geometries;
 
-namespace QGISDataApi.Services
+namespace QGISDirectDatabaseConnectionApi.Services
 {
     public class DbContext: IDbContext
     {
-        private readonly string _connectionString = "Data Source = DESKTOP-PMP9UHE; Initial catalog=Project; Integrated Security=true";
+        private readonly string _connectionString;
+        public DbContext()
+        {
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+           .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+           .AddJsonFile("appsettings.json")
+           .Build();
+            _connectionString = configuration.GetConnectionString("DefaultConnection");
+        }
         public async Task<List<Building>> GetItems()
         {
             string Query = "SELECT * FROM Buildings" ;
@@ -26,7 +36,7 @@ namespace QGISDataApi.Services
                             return null;
                         }
                         var _id = reader.GetInt32(0);
-                        var _geom = SqlGeometry.Deserialize(reader.GetSqlBytes(1)).ToString();
+                        var _geom =  SqlGeometry.Deserialize(reader.GetSqlBytes(1)).ToString();
                         var _addres = reader.GetString(2);
                         var newbie = new Building()
                         {

@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QGISBlazorWebAssemblyApplication", "QGISProject\QGISBlazorWebAssemblyApplication.csproj", "{522B5BE3-BA07-45AF-AD94-986E701C6A64}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QGISDirectDatabaseConnectionApi", "QGISDataApi\QGISDirectDatabaseConnectionApi.csproj", "{4BADCC8B-F220-46FF-8ED1-9B4B2DA6C607}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QGISEFApi", "QGISEFApi\QGISEFApi.csproj", "{5B168486-8B75-4563-9768-EC00B837D95B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QGISBlazorWebAssemblyApplication", "QGISBlazorWebAssemblyApplication\QGISBlazorWebAssemblyApplication.csproj", "{59FA1F75-907A-47C9-BBD9-67CB57E41BFE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QGISDirectDatabaseConnectionApi", "QGISDirectDbConnection\QGISDirectDatabaseConnectionApi.csproj", "{D29A621B-4B92-4565-B29A-C979F534C5D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,18 +15,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{522B5BE3-BA07-45AF-AD94-986E701C6A64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{522B5BE3-BA07-45AF-AD94-986E701C6A64}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{522B5BE3-BA07-45AF-AD94-986E701C6A64}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{522B5BE3-BA07-45AF-AD94-986E701C6A64}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4BADCC8B-F220-46FF-8ED1-9B4B2DA6C607}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4BADCC8B-F220-46FF-8ED1-9B4B2DA6C607}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4BADCC8B-F220-46FF-8ED1-9B4B2DA6C607}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4BADCC8B-F220-46FF-8ED1-9B4B2DA6C607}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5B168486-8B75-4563-9768-EC00B837D95B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5B168486-8B75-4563-9768-EC00B837D95B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B168486-8B75-4563-9768-EC00B837D95B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B168486-8B75-4563-9768-EC00B837D95B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59FA1F75-907A-47C9-BBD9-67CB57E41BFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59FA1F75-907A-47C9-BBD9-67CB57E41BFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59FA1F75-907A-47C9-BBD9-67CB57E41BFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59FA1F75-907A-47C9-BBD9-67CB57E41BFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D29A621B-4B92-4565-B29A-C979F534C5D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D29A621B-4B92-4565-B29A-C979F534C5D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D29A621B-4B92-4565-B29A-C979F534C5D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D29A621B-4B92-4565-B29A-C979F534C5D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

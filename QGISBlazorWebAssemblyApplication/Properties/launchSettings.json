@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "QGISProject": {
+    "QGISBlazorWebAssemblyApplication": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

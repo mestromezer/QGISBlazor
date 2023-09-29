@@ -1,5 +1,4 @@
-﻿using Microsoft.SqlServer.Types;
-using NetTopologySuite.Geometries;
+﻿using NetTopologySuite.Geometries;
 using System.ComponentModel.DataAnnotations;
 
 namespace QGISEFApi.Models

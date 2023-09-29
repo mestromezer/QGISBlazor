@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "QGISDataApi": {
+    "QGISDirectDatabaseConnectionApi": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

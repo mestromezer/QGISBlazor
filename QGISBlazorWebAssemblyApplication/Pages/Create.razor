@@ -24,24 +24,28 @@
 </EditForm>
 
 @code {
-    private Building Model { get; set; }
-    protected override void OnInitialized()
-    {
-        Model = new Building();
-        base.OnInitialized();
-    }
+    private Building Model { get; set; } = new Building();
     private async void Send()
     {
+        using (var req = new HttpRequestMessage(HttpMethod.Get, $"{configuration["apiUrl"]}{1}"))
+        {
+            var response = await client.SendAsync(req);
+            Model = JsonProcessor<Building>.Parse(await response.Content.ReadAsStringAsync());
+        }
         var request = new HttpRequestMessage(HttpMethod.Post, configuration["apiUrl"]);
-        request.Content = new StringContent(JsonProcessor<Building>.ConvertToGeoJson(Model));
+        var tmp = JsonProcessor<Building>.ConvertToGeoJson(Model);
+        request.Content = new StringContent(tmp, Encoding.UTF8,
+                                    "application/json");
+        logger.LogInformation(tmp);
         try
         {
             var response = await client.SendAsync(request);
             logger.LogInformation($"POST response status: {response.StatusCode}");
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-            logger.LogError("Create page Send method occured error");
+            logger.LogError("POST page Send method occured error");
+            logger.LogError(ex.Message);
             throw ex;
         }
         navigationManager.NavigateTo("/");

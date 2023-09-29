@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Configuration;
-using QGISDataApi.Services;
+using QGISDirectDatabaseConnectionApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

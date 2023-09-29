@@ -9,12 +9,12 @@
 <EditForm Model="@Model" class="row">
     <div class="row">
         <label class="col">Новая геометрия: </label>
-        <InputFile @bind-Value="Model.Geom" class="col"/>
+        <InputFile @bind-Value="Model!.Geom" class="col"/>
     </div>
 
     <div class="row">
         <label class="col">Новый адрес: </label>
-        <InputText @bind-Value="Model.Address" class="col"/>
+        <InputText @bind-Value="Model!.Address" class="col"/>
     </div>
 
     <button @onclick="Send" type="submit">Submit</button>
@@ -23,18 +23,18 @@
 @code {
     [Parameter]
     public int id { get; set; }
-    private Building Model { get; set; }
+    private Building Model { get; set; } = new Building();
     protected override async void OnInitialized()
     {
-        Model = new Building();
         try
         {
-            using (var request = new HttpRequestMessage(HttpMethod.Get, $"{configuration["apiUrl"]}/{id}"))
+            using (var request = new HttpRequestMessage(HttpMethod.Get, $"{configuration["apiUrl"]}{id}"))
             {
                 var response = await client.SendAsync(request);
                 logger.LogInformation($"GET (id={id}) response status: {response.StatusCode}");
                 Model = JsonProcessor<Building>.Parse(await response.Content.ReadAsStringAsync());
                 if (Model == null) throw new Exception("Responsed Model eqauls null");
+                base.OnInitialized();
             }
         }
         catch (Exception ex)
@@ -45,7 +45,7 @@
     }
     private async void Send()
     {
-        var request = new HttpRequestMessage(HttpMethod.Put, $"{configuration["apiUrl"]}/");
+        var request = new HttpRequestMessage(HttpMethod.Put, configuration["apiUrl"]);
         var tmp = JsonProcessor<Building>.ConvertToGeoJson(Model);
         request.Content = new StringContent(tmp, Encoding.UTF8,
                                     "application/json");

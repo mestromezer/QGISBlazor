@@ -1,6 +1,6 @@
 ﻿
 
-namespace QGISDataApi.Services
+namespace QGISDirectDatabaseConnectionApi.Services
 {
     public interface IDbContext
     {

@@ -49,12 +49,10 @@ else
     {
         try
         {
-            using (var request = new HttpRequestMessage(HttpMethod.Delete, $"{configuration["apiUrl"]}/{id}"))
+            using (var request = new HttpRequestMessage(HttpMethod.Delete, $"{configuration["apiUrl"]}{id}"))
             {
-
                 var response = await client.SendAsync(request);
                 logger.LogInformation($"DELETE response status: {response.StatusCode}");
-
             }
         }
         catch (Exception ex)
@@ -62,7 +60,7 @@ else
             logger.LogError("Default page Delete method occured error");
             throw ex;
         }
-        navigationManager.NavigateTo("/", true);
+        navigationManager.NavigateTo("/");
     }
 
     protected override async Task OnInitializedAsync()

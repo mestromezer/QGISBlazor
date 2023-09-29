@@ -3,7 +3,6 @@
 @inject NavigationManager navigationManager
 @inject HttpClient client
 @inject ILogger<BufferZone> logger
-@using Microsoft.SqlServer.Types
 @using System.Data.SqlTypes
 <h1>Площадь буферной зоны</h1>
 
@@ -14,7 +13,7 @@
     }
     else
     {
-        <h3>Площадь буферной зоны, радиусом 5 метров: @squareOfBufferZone</h3>
+        <h3>Площадь буферной зоны, радиусом 5 метров: [@squareOfBufferZone]</h3>
         <a @onclick="@(e=>navigationManager.NavigateTo("/"))">Назад</a>
     }
 </label>
@@ -23,14 +22,12 @@
 @code {
     [Parameter]
     public int id { get; set; }
-    //private Building Model { get; set; }
     private string squareOfBufferZone {get; set;}
     protected override async void OnInitialized()
     {
-        //Model = new Building();
         try
         {
-            using (var request = new HttpRequestMessage(HttpMethod.Get, $"{configuration["apiUrl"]}/{id}/bufferzone"))
+            using (var request = new HttpRequestMessage(HttpMethod.Get, $"{configuration["apiUrl"]}{id}/bufferzone"))
             {
                 var response = await client.SendAsync(request);
                 logger.LogInformation($"GET (id={id}) response status: {response.StatusCode}");

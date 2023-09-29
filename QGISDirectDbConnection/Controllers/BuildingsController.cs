@@ -2,15 +2,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.SqlServer.Types;
 using QGISDirectDatabaseConnectionApi.Models;
 
-namespace QGISDataApi.Controllers
+namespace QGISDirectDatabaseConnectionApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class QGISController : ControllerBase
+    public class BuildingsController : ControllerBase
     {
-        private readonly ILogger<QGISController> _logger;
+        private readonly ILogger<BuildingsController> _logger;
         private readonly Services.DbContext _connection;
-        public QGISController(ILogger<QGISController> logger, Services.IDbContext connection)
+        public BuildingsController(ILogger<BuildingsController> logger, Services.IDbContext connection)
         {
             _logger = logger;
             _connection = (Services.DbContext)connection;
@@ -98,7 +98,9 @@ namespace QGISDataApi.Controllers
             {
                 Response.StatusCode = 200;
                 var building = await _connection.GetItem(id);
-                var geom = SqlGeometry.Parse(building.Geom);
+                var geom = SqlGeometry
+                    .Parse(building.Geom.ToString()
+                    );
                 string area = geom.STBuffer(5).STArea().ToString();
                 return area;
             }
