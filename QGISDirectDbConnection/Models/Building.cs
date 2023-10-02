@@ -9,7 +9,7 @@ namespace QGISDirectDatabaseConnectionApi.Models
         [Range(0, int.MaxValue)]
         public int ID { get; set; }
         [Required]
-        public Geometry? Geom { get; set; }
+        public string? Geom { get; set; }
         [StringLength(128)]
         public string? Address { get; set; }
     }

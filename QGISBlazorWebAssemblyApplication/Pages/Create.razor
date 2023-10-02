@@ -1,5 +1,6 @@
 ﻿@page "/create"
 @using System.Text;
+@using NetTopologySuite.Geometries;
 @using Newtonsoft.Json
 @using QGISBlazorWebAssemblyApplication.Models;
 @inject IConfiguration configuration
@@ -12,7 +13,7 @@
 <EditForm Model="@Model" class="row">
     <div class="row">
         <label class="col">Геометрия: </label>
-        <InputFile @bind-Value="Model.Geom" class="col" />
+        <InputTextArea @bind-Value="geometry" class="col" />
     </div>
 
     <div class="row">
@@ -25,18 +26,16 @@
 
 @code {
     private Building Model { get; set; } = new Building();
+    private string geometry { get; set; }
     private async void Send()
     {
-        using (var req = new HttpRequestMessage(HttpMethod.Get, $"{configuration["apiUrl"]}{1}"))
-        {
-            var response = await client.SendAsync(req);
-            Model = JsonProcessor<Building>.Parse(await response.Content.ReadAsStringAsync());
-        }
+       
+        Model.Geom = JsonProcessor<Geometry>.Parse(geometry);
         var request = new HttpRequestMessage(HttpMethod.Post, configuration["apiUrl"]);
-        var tmp = JsonProcessor<Building>.ConvertToGeoJson(Model);
-        request.Content = new StringContent(tmp, Encoding.UTF8,
-                                    "application/json");
-        logger.LogInformation(tmp);
+        request.Content = new StringContent(
+            JsonProcessor<Building>.ConvertToGeoJson(Model), 
+            Encoding.UTF8,
+            "application/json");
         try
         {
             var response = await client.SendAsync(request);
