@@ -1,8 +1,4 @@
 ﻿@page "/create"
-@using System.Text;
-@using NetTopologySuite.Geometries;
-@using Newtonsoft.Json
-@using QGISBlazorWebAssemblyApplication.Models;
 @inject IConfiguration configuration
 @inject NavigationManager navigationManager
 @inject HttpClient client
@@ -10,30 +6,30 @@
 
 <h1>Создать запись в таблице "Buildings".</h1>
 
-<EditForm Model="@Model" class="row">
+<EditForm Model="@_model" class="row">
     <div class="row">
         <label class="col">Геометрия: </label>
-        <InputTextArea @bind-Value="geometry" class="col" />
+        <InputTextArea @bind-Value="_geometryAsText" class="col" />
     </div>
 
     <div class="row">
         <label class="col">Адрес: </label>
-        <InputText @bind-Value="Model.Address" class="col" />
+        <InputText @bind-Value="_model.Address" class="col" />
     </div>
 
     <button @onclick="Send" type="submit">Submit</button>
 </EditForm>
 
 @code {
-    private Building Model { get; set; } = new Building();
-    private string geometry { get; set; }
+    private Building _model { get; set; } = new Building();
+    private string _geometryAsText { get; set; }
     private async void Send()
     {
-       
-        Model.Geom = JsonProcessor<Geometry>.Parse(geometry);
+
+        _model.Geom = JsonProcessor<Geometry>.Parse(_geometryAsText);
         var request = new HttpRequestMessage(HttpMethod.Post, configuration["apiUrl"]);
         request.Content = new StringContent(
-            JsonProcessor<Building>.ConvertToGeoJson(Model), 
+            JsonProcessor<Building>.ConvertToGeoJson(_model),
             Encoding.UTF8,
             "application/json");
         try

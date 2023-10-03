@@ -1,7 +1,4 @@
 ﻿@page "/"
-@using System.Text.Json
-@using NetTopologySuite.IO;
-@using QGISBlazorWebAssemblyApplication.Models;
 @inject HttpClient client
 @inject NavigationManager navigationManager
 @inject ILogger<Index> logger
@@ -10,10 +7,10 @@
 <h1>Панель управления</h1>
 <TableControlPanel />
 <h1>Списко зданий</h1>
-<p>Данные получены от QGISDataApi</p>
-@if (buildingsData == null)
+<p>Данные получены от @configuration["apiUrl"]</p>
+@if (_buildingsData == null)
 {
-    <p><em>Loading...</em></p>
+    <p><em>Загрузка таблицы зданий...</em></p>
 }
 else
 {
@@ -25,7 +22,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var data in buildingsData)
+            @foreach (var data in _buildingsData)
             {
                 <tr>
                     <td>@data.ID</td>
@@ -43,7 +40,7 @@ else
 
 @code 
 {
-    IList<Building> buildingsData = default!;
+    private IList<Building> _buildingsData = default!;
 
     private async void Delete(int id)
     {
@@ -58,32 +55,35 @@ else
         catch (Exception ex)
         {
             logger.LogError("Default page Delete method occured error");
-            throw ex;
+            logger.LogError(ex.Message);
+            throw;
         }
         navigationManager.NavigateTo("/", true);
     }
 
     protected override async Task OnInitializedAsync()
     {
-        var request = new HttpRequestMessage(HttpMethod.Get,
-            configuration["apiUrl"]
-        );
-        request.Headers.Add("accept", "application/json");
-        var response = await client.SendAsync(request);
-
-        try
+        using (var request = new HttpRequestMessage(HttpMethod.Get, configuration["apiUrl"]))
         {
-            var data = await response.Content.ReadAsStringAsync();
+            request.Headers.Add("accept", "application/json");
+            var response = await client.SendAsync(request);
 
-            buildingsData = JsonProcessor<List<Building>>.Parse(data);
+            try
+            {
+                _buildingsData = JsonProcessor<List<Building>>.Parse(
+                    await response.Content.ReadAsStringAsync()
+                );
 
-            logger.LogInformation($"GET response status: {response.StatusCode}");
+                logger.LogInformation($"GET response status: {response.StatusCode}");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError("Index page OnInitializedAsync method occured error");
+                logger.LogError(ex.Message);
+                throw;
+            }
         }
-        catch (Exception ex) {
-            logger.LogError("Index page OnInitializedAsync method occured error");
-            logger.LogError(ex.Message);
-            throw ex;
-        }
+        await base.OnInitializedAsync();
     }
 
 }

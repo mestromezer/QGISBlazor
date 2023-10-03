@@ -3,27 +3,34 @@
 @inject NavigationManager navigationManager
 @inject HttpClient client
 @inject ILogger<Edit> logger
+@if (_model == null)
+{
+    <p><em>Поиск здания в базе...</em></p>
+}
+else
+{
+    <h1>Редактировать</h1>
 
-<h1>Редактировать</h1>
+    <EditForm Model="@_model" class="row">
+        <div class="row">
+            <label for="Geom" class="col">Новая геометрия: </label>
+            <InputTextArea id="Geom" @bind-Value="_geometryAsText" class="col" />
+        </div>
 
-<EditForm Model="@Model" class="row">
-    <div class="row">
-        <label class="col">Новая геометрия: </label>
-        <InputFile @bind-Value="Model!.Geom" class="col"/>
-    </div>
+        <div class="row">
+            <label for="Address" class="col">Новый адрес: </label>
+            <InputText id="Address" @bind-Value="_model!.Address" class="col"/>
+        </div>
 
-    <div class="row">
-        <label class="col">Новый адрес: </label>
-        <InputText @bind-Value="Model!.Address" class="col"/>
-    </div>
-
-    <button @onclick="Send" type="submit">Submit</button>
-</EditForm>
+        <button @onclick="Send" type="submit">Submit</button>
+    </EditForm>
+}
 
 @code {
     [Parameter]
     public int id { get; set; }
-    private Building Model { get; set; } = new Building();
+    private string _geometryAsText { get; set; }
+    private Building? _model { get; set; } = new();
     protected override async void OnInitialized()
     {
         try
@@ -32,35 +39,44 @@
             {
                 var response = await client.SendAsync(request);
                 logger.LogInformation($"GET (id={id}) response status: {response.StatusCode}");
-                Model = JsonProcessor<Building>.Parse(await response.Content.ReadAsStringAsync());
-                if (Model == null) throw new Exception("Responsed Model eqauls null");
+                _model = JsonProcessor<Building>.Parse(
+                    await response.Content.ReadAsStringAsync()
+                );
+                if (_model == null) throw new Exception("Responsed Model eqauls null");
                 base.OnInitialized();
+                StateHasChanged();
             }
         }
         catch (Exception ex)
         {
             logger.LogError("Edit page OnInitialized method occured error");
-            throw ex;
+            logger.LogError(ex.Message);
+            throw;
         }
     }
     private async void Send()
     {
-        var request = new HttpRequestMessage(HttpMethod.Put, configuration["apiUrl"]);
-        var tmp = JsonProcessor<Building>.ConvertToGeoJson(Model);
-        request.Content = new StringContent(tmp, Encoding.UTF8,
-                                    "application/json");
-        logger.LogInformation(tmp);
-        try
+        using (var request = new HttpRequestMessage(HttpMethod.Put, configuration["apiUrl"]))
         {
-            var response = await client.SendAsync(request);
-            logger.LogInformation($"PUT response status: {response.StatusCode}");
+            _model.Geom = JsonProcessor<Geometry>.Parse(_geometryAsText);
+            var tmp = JsonProcessor<Building>.ConvertToGeoJson(_model);
+            request.Content = new StringContent(
+                tmp,
+                Encoding.UTF8,
+                "application/json"
+            );
+            try
+            {
+                var response = await client.SendAsync(request);
+                logger.LogInformation($"PUT response status: {response.StatusCode}");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError("Edit page Send method occured error");
+                logger.LogError(ex.Message);
+                throw;
+            }
+            navigationManager.NavigateTo("/",true);
         }
-        catch (Exception ex)
-        {
-            logger.LogError("Edit page Send method occured error");
-            logger.LogError(ex.Message);
-            throw ex;
-        }
-        navigationManager.NavigateTo("/");
     }
 }

@@ -1,13 +1,12 @@
 ﻿using NetTopologySuite.Geometries;
 using System.ComponentModel.DataAnnotations;
 
-namespace QGISEFApi.Models
+namespace QGISEFApi.Models;
+
+public class Building
 {
-    public class Building
-    {
-        [Key]
-        public int Id { get; set; }
-        public Geometry? Geom { get; set; }
-        public string? Address { get; set; }
-    }
+    [Key]
+    public int Id { get; set; }
+    public Geometry? Geom { get; set; }
+    public string? Address { get; set; }
 }

@@ -1,29 +1,26 @@
-﻿using NetTopologySuite.Geometries;
-using NetTopologySuite.IO;
+﻿using NetTopologySuite.IO;
 using Newtonsoft.Json;
 
-namespace QGISBlazorWebAssemblyApplication
+namespace QGISBlazorWebAssemblyApplication;
+public static class JsonProcessor<T>
 {
-    public static class JsonProcessor<T>
+    public static string ConvertToGeoJson(T data)
     {
-        public static string ConvertToGeoJson(T data)
+        var serializer = GeoJsonSerializer.Create();
+        using (var stringWriter = new StringWriter())
+        using (var jsonWriter = new JsonTextWriter(stringWriter))
         {
-            var serializer = GeoJsonSerializer.Create();
-            using (var stringWriter = new StringWriter())
-            using (var jsonWriter = new JsonTextWriter(stringWriter))
-            {
-                serializer.Serialize(jsonWriter, data);
-                return stringWriter.ToString();
-            }
+            serializer.Serialize(jsonWriter, data);
+            return stringWriter.ToString();
         }
-        public static T Parse(string data)
+    }
+    public static T Parse(string data)
+    {
+        var serializer = GeoJsonSerializer.Create();
+        using (var stringReader = new StringReader(data))
+        using (var jsonReader = new JsonTextReader(stringReader))
         {
-            var serializer = GeoJsonSerializer.Create();
-            using (var stringReader = new StringReader(data))
-            using (var jsonReader = new JsonTextReader(stringReader))
-            {
-                return serializer.Deserialize<T>(jsonReader);
-            }
+            return serializer.Deserialize<T>(jsonReader);
         }
     }
 }
