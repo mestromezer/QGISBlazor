@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.SqlServer.Types;
+using QGISBlazorWebAssemblyApplication;
 using QGISDirectDatabaseConnectionApi.Models;
 
 namespace QGISDirectDatabaseConnectionApi.Controllers;
@@ -22,7 +23,7 @@ public class BuildingsController : ControllerBase
         try
         {
             Response.StatusCode = 200;
-            return await _connection.GetItems();
+            return await _connection.GetItems(); ;
         }
         catch (Exception ex)
         {

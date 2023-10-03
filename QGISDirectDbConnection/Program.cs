@@ -4,10 +4,12 @@ using QGISDirectDatabaseConnectionApi.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient();
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options => {
+    options.JsonSerializerOptions.Converters.Add(new NetTopologySuite.IO.Converters.GeoJsonConverterFactory());
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IDbContext<Building>, DbContext>();
+builder.Services.AddScoped<IDbContext<Building>, QGISDirectDatabaseConnectionApi.Services.DbContext>();
 builder.Services.AddCors(options =>
 {
 

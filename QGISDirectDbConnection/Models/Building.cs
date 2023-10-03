@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using NetTopologySuite.Geometries;
+using System.ComponentModel.DataAnnotations;
 
 namespace QGISDirectDatabaseConnectionApi.Models;
 
@@ -8,7 +9,7 @@ public class Building
     [Range(0, int.MaxValue)]
     public int ID { get; set; }
     [Required]
-    public string? Geom { get; set; }
+    public Geometry? Geom { get; set; }
     [StringLength(128)]
     public string? Address { get; set; }
 }

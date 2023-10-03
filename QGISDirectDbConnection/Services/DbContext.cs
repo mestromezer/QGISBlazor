@@ -1,6 +1,8 @@
 ﻿using Microsoft.SqlServer.Types;
 using QGISDirectDatabaseConnectionApi.Models;
 using System.Data.SqlClient;
+using NetTopologySuite.IO;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace QGISDirectDatabaseConnectionApi.Services;
 
@@ -34,12 +36,13 @@ public class DbContext: IDbContext<Building>
                         return null;
                     }
                     var id = reader.GetInt32(0);
-                    var geom =  SqlGeometry.Deserialize(reader.GetSqlBytes(1)).ToString();
+                    var bytes = reader.GetSqlBytes(1).Value;
+                    var geometry = SqlGeometryProcessor.SqlBytesToGeometry(bytes);
                     var addres = reader.GetString(2);
                     var newbie = new Building()
                     {
                         ID = id,
-                        Geom = geom,
+                        Geom = geometry,
                         Address = addres
                     };
                     buildings.Add(newbie);
@@ -57,8 +60,8 @@ public class DbContext: IDbContext<Building>
         using (var con = new SqlConnection(_connectionString))
         {
             con.Open();
-            var command = new SqlCommand(query, con);
-            using (SqlDataReader reader = command.ExecuteReader())
+            var cmd = new SqlCommand(query, con);
+            using (SqlDataReader reader = cmd.ExecuteReader())
             {
                 await reader.ReadAsync();
                 if (reader.IsDBNull(0))
@@ -66,12 +69,13 @@ public class DbContext: IDbContext<Building>
                     return null;
                 }
                 var id = reader.GetInt32(0);
-                var geom = SqlGeometry.Deserialize(reader.GetSqlBytes(1)).ToString();
+                var bytes = reader.GetSqlBytes(1).Value;
+                var geometry = SqlGeometryProcessor.SqlBytesToGeometry(bytes);
                 var address = reader.GetString(2);
                 return new Building()
                 {
                     ID = id,
-                    Geom = geom,
+                    Geom = geometry,
                     Address = address
                 };
             }
@@ -79,17 +83,39 @@ public class DbContext: IDbContext<Building>
     }
     public async Task AddItem(Building newbie)
     {
-        var query = $"DECLARE @g geometry;   \r\nSET @g = geometry::Parse(\'{newbie.Geom}\')\n" +
-            $"INSERT INTO Buildings (geom,address) VALUES(@g,\'{newbie.Address}\')";
+        var query = "INSERT INTO Buildings (geom,address) VALUES(@geom, @address)";
         using (var con = new SqlConnection(_connectionString))
         {
             con.Open();
-            var command = new SqlCommand(query, con);
-            var number = await command.ExecuteNonQueryAsync();
+            var cmd = new SqlCommand(query, con);
+            cmd.Parameters.Add(new SqlParameter("geom", newbie.Geom.Buffer(0).AsText()));
+            cmd.Parameters.Add(new SqlParameter("address", newbie.Address));
+            var number = await cmd.ExecuteNonQueryAsync();
             if (number == 0) 
             {
                 throw new Exception(
                     $"Exception occured while trying to add element with id={newbie.ID}"
+                    );
+            }
+        }
+    }
+    public async Task UpdateItem(Building newbie)
+    {
+        var query = $"UPDATE Buildings\n" +
+            $"SET Buildings.geom=@geom, Buildings.address=@address\n" +
+            $"WHERE Buildings.ID={newbie.ID}";
+        using (var con = new SqlConnection(_connectionString))
+        {
+            con.Open();
+            var cmd = new SqlCommand(query, con);
+            cmd.Parameters.Add(new SqlParameter("geom", newbie.Geom.Buffer(0).AsText()));
+            cmd.Parameters.Add(new SqlParameter("address", newbie.Address));
+            var number = await cmd.ExecuteNonQueryAsync();
+            if (number == 0)
+            {
+                throw new Exception(
+                    $"Exception occured while trying to update element with id={newbie.ID}\n" +
+                    $"No such record found\n"
                     );
             }
         }
@@ -100,33 +126,13 @@ public class DbContext: IDbContext<Building>
         using (var con = new SqlConnection(_connectionString))
         {
             con.Open();
-            var command = new SqlCommand(query, con);
-            var number = await command.ExecuteNonQueryAsync();
+            var cmd = new SqlCommand(query, con);
+            var number = await cmd.ExecuteNonQueryAsync();
             if (number == 0)
             {
                 throw new Exception(
                     $"Exception occured while trying to delete element with id={id}\n"+
                     $"Could not find"
-                    );
-            }
-        }
-    }
-    public async Task UpdateItem(Building newbie)
-    {
-        var query= $"DECLARE @g geometry;   \r\nSET @g = geometry::Parse('{newbie.Geom}')\n" +
-            $"UPDATE Buildings\n" +
-            $"SET Buildings.geom=@g, Buildings.address=\'{newbie.Address}\'\n" +
-            $"WHERE Buildings.ID={newbie.ID}";
-        using (var con = new SqlConnection(_connectionString))
-        {
-            con.Open();
-            var exec_query = new SqlCommand(query, con);
-            var number = await exec_query.ExecuteNonQueryAsync();
-            if (number == 0)
-            {
-                throw new Exception(
-                    $"Exception occured while trying to update element with id={newbie.ID}\n" +
-                    $"No such record found\n"
                     );
             }
         }

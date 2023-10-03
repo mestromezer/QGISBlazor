@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QGISDataApi", "QGISDataApi.csproj", "{F6691FC7-CD3E-481A-AB04-8D733B133643}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QGISDirectDatabaseConnectionApi", "QGISDirectDatabaseConnectionApi.csproj", "{F6691FC7-CD3E-481A-AB04-8D733B133643}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
