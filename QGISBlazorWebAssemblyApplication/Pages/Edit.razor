@@ -39,7 +39,7 @@ else
             {
                 var response = await client.SendAsync(request);
                 logger.LogInformation($"GET (id={id}) response status: {response.StatusCode}");
-                _model = JsonProcessor<Building>.Parse(
+                _model = Tools.JsonProcessor<Building>.Parse(
                     await response.Content.ReadAsStringAsync()
                 );
                 if (_model == null) throw new Exception("Responsed Model eqauls null");
@@ -58,8 +58,8 @@ else
     {
         using (var request = new HttpRequestMessage(HttpMethod.Put, configuration["apiUrl"]))
         {
-            _model.Geom = JsonProcessor<Geometry>.Parse(_geometryAsText);
-            var tmp = JsonProcessor<Building>.ConvertToGeoJson(_model);
+            _model.Geom = Tools.JsonProcessor<Geometry>.Parse(_geometryAsText);
+            var tmp = Tools.JsonProcessor<Building>.ConvertToGeoJson(_model);
             request.Content = new StringContent(
                 tmp,
                 Encoding.UTF8,

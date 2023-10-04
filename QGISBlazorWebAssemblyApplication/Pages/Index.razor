@@ -70,7 +70,7 @@ else
 
             try
             {
-                _buildingsData = JsonProcessor<List<Building>>.Parse(
+                _buildingsData = Tools.JsonProcessor<List<Building>>.Parse(
                     await response.Content.ReadAsStringAsync()
                 );
 

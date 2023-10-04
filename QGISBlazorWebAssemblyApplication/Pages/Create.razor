@@ -26,10 +26,10 @@
     private async void Send()
     {
 
-        _model.Geom = JsonProcessor<Geometry>.Parse(_geometryAsText);
+        _model.Geom = Tools.JsonProcessor<Geometry>.Parse(_geometryAsText);
         var request = new HttpRequestMessage(HttpMethod.Post, configuration["apiUrl"]);
         request.Content = new StringContent(
-            JsonProcessor<Building>.ConvertToGeoJson(_model),
+            Tools.JsonProcessor<Building>.ConvertToGeoJson(_model),
             Encoding.UTF8,
             "application/json");
         try

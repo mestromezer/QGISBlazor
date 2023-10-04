@@ -2,7 +2,7 @@
 using NetTopologySuite.IO;
 using System.Data.SqlTypes;
 
-namespace QGISDirectDatabaseConnectionApi.Services;
+namespace QGISDirectDatabaseConnectionApi.Tools;
 
 public static class SqlGeometryProcessor
 {

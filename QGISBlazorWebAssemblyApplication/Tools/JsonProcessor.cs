@@ -1,7 +1,7 @@
 ﻿using NetTopologySuite.IO;
 using Newtonsoft.Json;
 
-namespace QGISBlazorWebAssemblyApplication;
+namespace QGISBlazorWebAssemblyApplication.Tools;
 public static class JsonProcessor<T>
 {
     public static string ConvertToGeoJson(T data)
